@@ -1,8 +1,5 @@
 package com.gildedrose;
 
-import com.gildedrose.SellInUpdater;
-import com.gildedrose.QualityUpdater;
-
 class GildedRose {
     Item[] items;
     SellInUpdater sellInUpdater = new SellInUpdater();

@@ -2,19 +2,27 @@ package com.gildedrose;
 
 public class QualityUpdater {
 
+    private static final String INCREASE = "increase";
+    private static final String DECREASE = "decrease";
+    private static final String SET = "set";
+    private static final String AGED_BRIE = "Aged Brie";
+    private static final String BACKSTAGE_PASS = "Backstage";
+    private static final String SULFURAS = "Sulfuras,";
+    private static final String CONJURED = "Conjured ";
+
     //Find items with exceptional quality rules
     public void updateQualityForItem(Item item) throws Exception {
         switch(item.name.substring(0,9)) {
-            case "Aged Brie":
+            case AGED_BRIE:
                 updateNonDegradingItemQuality(item);
                 break;
-            case "Sulfuras,":
+            case SULFURAS:
                 updateLegendaryItemQuality(item);
                 break;
-            case "Backstage":
+            case BACKSTAGE_PASS:
                 updateBackstagePassQuality(item);
                 break;
-            case "Conjured ":
+            case CONJURED:
                 updateConjuredItemQuality(item);
                 break;
             default:
@@ -25,10 +33,10 @@ public class QualityUpdater {
     //Increase quality of items which cannot degrade
     private void updateNonDegradingItemQuality(Item item) throws Exception {
         if (item.sellIn >= 0) {
-            adjustQuality(item, "increase",1);
+            adjustQuality(item, INCREASE,1);
         }
         else {
-            adjustQuality(item, "increase",2);
+            adjustQuality(item, INCREASE,2);
         }
         makeSureQualityIsInRange(item, 50,0);
     }
@@ -41,16 +49,16 @@ public class QualityUpdater {
     //Increase quality of backstage passes as the concert date nears, after the concert quality drops to 0
     private void updateBackstagePassQuality(Item item) throws Exception {
         if (item.sellIn > 10) {
-            adjustQuality(item, "increase",1);
+            adjustQuality(item, INCREASE,1);
         }
         if (item.sellIn <= 10 && item.sellIn > 5) {
-            adjustQuality(item, "increase",2);
+            adjustQuality(item, INCREASE,2);
         }
         if (item.sellIn <= 5 && item.sellIn >= 0) {
-            adjustQuality(item, "increase",3);
+            adjustQuality(item, INCREASE,3);
         }
         if (item.sellIn < 0) {
-            adjustQuality(item, "set",0);
+            adjustQuality(item, SET,0);
         }
         makeSureQualityIsInRange(item, 50,0);
     }
@@ -58,10 +66,10 @@ public class QualityUpdater {
     //Decrease quality of conjured items fast
     private void updateConjuredItemQuality(Item item) throws Exception {
         if (item.sellIn >= 0) {
-            adjustQuality(item, "decrease",2);
+            adjustQuality(item, DECREASE,2);
         }
         else {
-            adjustQuality(item, "decrease",4);
+            adjustQuality(item, DECREASE,4);
         }
         makeSureQualityIsInRange(item, 50,0);
     }
@@ -69,10 +77,10 @@ public class QualityUpdater {
     //Decrease quality of item types not specified above
     private void updateRegularItemQuality(Item item) throws Exception {
         if (item.sellIn >= 0) {
-            adjustQuality(item, "decrease",1);
+            adjustQuality(item, DECREASE,1);
         }
         else {
-            adjustQuality(item, "decrease",2);
+            adjustQuality(item, DECREASE,2);
         }
         makeSureQualityIsInRange(item, 50,0);
     }
@@ -80,13 +88,13 @@ public class QualityUpdater {
     //Adjust the item quality with previously specified value
     private void adjustQuality(Item item, String adjustment , int value) throws Exception {
         switch (adjustment) {
-            case "increase":
+            case INCREASE:
                 item.quality = item.quality + value;
                 break;
-            case "decrease":
+            case DECREASE:
                 item.quality = item.quality - value;
                 break;
-            case "set":
+            case SET:
                 item.quality = value;
                 break;
             default:
